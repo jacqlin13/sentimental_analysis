@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .positive {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .negative {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .neutral {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        .score {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sentiment Analysis Tool</h1>
+    <p>Enter your text below to analyze its sentiment:</p>
+    
+    <textarea id="text-input" placeholder="Type or paste your text here..."></textarea>
+    
+    <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+    
+    <div id="result" style="display: none;">
+        <h3>Analysis Result:</h3>
+        <p id="sentiment-text">Sentiment: <span id="sentiment"></span></p>
+        <p class="score">Confidence Score: <span id="score"></span></p>
+    </div>
+
+    <script>
+        function analyzeSentiment() {
+            const text = document.getElementById('text-input').value.trim();
+            
+            if (!text) {
+                alert('Please enter some text to analyze.');
+                return;
+            }
+            
+            // In a real implementation, you would call an API here
+            // This is a mock implementation for demonstration
+            const resultDiv = document.getElementById('result');
+            const sentimentSpan = document.getElementById('sentiment');
+            const scoreSpan = document.getElementById('score');
+            
+            // Mock analysis - in a real app, replace with API call
+            const mockResult = mockSentimentAnalysis(text);
+            
+            sentimentSpan.textContent = mockResult.sentiment;
+            scoreSpan.textContent = mockResult.score.toFixed(2);
+            
+            // Set the appropriate class based on sentiment
+            resultDiv.className = '';
+            resultDiv.classList.add(mockResult.sentiment.toLowerCase());
+            resultDiv.style.display = 'block';
+        }
+        
+        function mockSentimentAnalysis(text) {
+            // This is a very simple mock analysis
+            // A real implementation would use a proper sentiment analysis API
+            
+            // Count positive and negative words
+            const positiveWords = ['happy', 'good', 'great', 'excellent', 'positive', 'joy', 'joyful', 'love'];
+            const negativeWords = ['sad', 'bad', 'terrible', 'awful', 'negative', 'hate', 'angry', 'upset'];
+            
+            let positiveCount = 0;
+            let negativeCount = 0;
+            
+            const words = text.toLowerCase().split(/\s+/);
+            
+            words.forEach(word => {
+                if (positiveWords.includes(word)) positiveCount++;
+                if (negativeWords.includes(word)) negativeCount++;
+            });
+            
+            const difference = positiveCount - negativeCount;
+            const total = positiveCount + negativeCount;
+            
+            let sentiment;
+            let score;
+            
+            if (total === 0) {
+                sentiment = 'Neutral';
+                score = 0.5;
+            } else {
+                score = (difference / total + 1) / 2; // Normalize to 0-1
+                
+                if (score > 0.6) {
+                    sentiment = 'Positive';
+                } else if (score < 0.4) {
+                    sentiment = 'Negative';
+                } else {
+                    sentiment = 'Neutral';
+                }
+            }
+            
+            return {
+                sentiment: sentiment,
+                score: score
+            };
+        }
+    </script>
+</body>
+</html>
